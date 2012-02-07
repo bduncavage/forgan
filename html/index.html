@@ -8,18 +8,20 @@ Title
 </title>
 
 <script type="text/javascript" src="../js/note.js"></script>
+<script type="text/javascript" src="../js/measure.js"></script>
+<script type="text/javascript" src="../js/song.js"></script>
 
 <script type="text/javascript">
 
 var audioContext = new webkitAudioContext();
-var note = new Note(audioContext);
+var song = new Song(audioContext, 4, 80);
 
 </script>
 
 </head>
 
 <body>
-<button type="button" onclick="note.playOn(0);">Play</button>
+<button type="button" onclick="song.playOn(0);">Play</button>
 </body>
 
 </html>
