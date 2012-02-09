@@ -17,22 +17,16 @@ function Note(audioContext, shortestNoteDuration) {
 }
 
 Note.prototype.generateRandomNote = function(min, max) {
+  var noteTable = new NoteTable();
   // are we a silent note (rest)?
-  this.isRest = this.getRandomInt(0, 22) == 21 ? true: false;
+  this.isRest = this.getRandomInt(0, noteTable.count - 1) == noteTable.count - 1 ? true: false;
+
   if(this.isRest == true) {
     return;
   }
 
-  // are we stepping down or up from middle A?
-  var downStep = this.getRandomInt(0, 2) == 0 ? true : false;
-  var steps = this.getRandomInt(0, 8);
-  // if we are up stepping, there are 5 more notes
-  var extraUpSteps = this.getRandomInt(0, 6);
-
-  var actualSteps = downStep ? steps * -1 : steps + extraUpSteps;
-
-  this.freq = 440 * Math.pow(2, (actualSteps / 12));
-
+  var randIndex = this.getRandomInt(0, noteTable.count - 1);
+  this.freq = noteTable.frequencyAtIndex(randIndex);;
   // now we've got our frequency
   // fill the buffer
   var buf = this.buffer.getChannelData(0);
