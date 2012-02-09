@@ -1,19 +1,39 @@
 var NoteDurationModifiers = [1, 2, 4, 8, 16];
 var NoteDurations = [0.0625, 0.125, 0.25, 0.5, 1];
 
-function Note(audioContext, shortestNoteDuration) {
+function Note(audioContext, shortestNoteDuration, initialNote) {
+  if(initialNote == null) {
+    var durIndex = this.getRandomInt(0, NoteDurations.length - 1);
+    this.durationModifier = NoteDurationModifiers[durIndex];
+    this.duration = NoteDurations[durIndex];
+  } else {
+    this.duration = initialNote.duration;
+    // this is stupid, need a better way
+    for(var i = 0; i < NoteDurations; i++) {
+      if(this.duration == NoteDurations[i]) {
+        this.durationModifier = NoteDurationModifiers[i];
+        break;
+      }
+    }
+  }
+
+  this.initialize(audioContext, shortestNoteDuration);
+
+  if(initialNote == null) {
+    this.generateRandomNote();
+  } else {
+    var noteTable = new NoteTable();
+    this.freq = noteTable.frequencyForNote(initialNote.noteName);
+    this.fillBufferWithFrequency(this.freq);
+  }
+}
+
+Note.prototype.initialize = function(audioContext, shortestNoteDuration) {
   this.audioContext = audioContext;
   this.sampleRate = audioContext.sampleRate;
-  
-  var durIndex = this.getRandomInt(0, NoteDurations.length - 1);
-  this.durationModifier = NoteDurationModifiers[durIndex];
-  this.duration = NoteDurations[durIndex];
   this.shortestNoteDuration = shortestNoteDuration;
-
   var numFrames = this.sampleRate * (shortestNoteDuration * this.durationModifier);
   this.buffer = this.audioContext.createBuffer(1, numFrames, this.sampleRate); 
-  // fill the buffer with a sine wave of a random frequency
-  this.generateRandomNote(); 
 }
 
 Note.prototype.generateRandomNote = function(min, max) {
@@ -28,10 +48,14 @@ Note.prototype.generateRandomNote = function(min, max) {
   var randIndex = this.getRandomInt(0, noteTable.count - 1);
   this.freq = noteTable.frequencyAtIndex(randIndex);;
   // now we've got our frequency
+  this.fillBufferWithFrequency(this.freq);
+}
+
+Note.prototype.fillBufferWithFrequency = function(freq) {
   // fill the buffer
   var buf = this.buffer.getChannelData(0);
   for (var i = 0; i < buf.length; i++) {
-    buf[i] = Math.sin(this.freq * (2 * Math.PI) * i / this.sampleRate);
+    buf[i] = Math.sin(freq * (2 * Math.PI) * i / this.sampleRate);
   }
 }
 
