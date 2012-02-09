@@ -12,20 +12,22 @@ function Measure(audioContext, tempo) {
 }
 
 Measure.prototype.playOn = function(time) {
-  var startTime = time + this.audioContext.currentTime + 0.010;
+  var startTime = time;
   var sixteenthNoteTime = this.sixteenthNoteTime;
 
   var cumulativeTime = 0;
   for (var i = 0; i < this.notes.length; i++) {
     if(i == 0) {
       cumulativeTime = startTime + this.notes[i].durationModifier * sixteenthNoteTime;
+      console.log('Note playing on time: '+startTime + ' duration: '+this.notes[i].durationModifier * sixteenthNoteTime);
       this.notes[i].playOn(startTime);
       this.notes[i].playOff(cumulativeTime);
     } else {
       var prevNote = this.notes[i - 1];
-      var noteOnTime = cumulativeTime + prevNote.durationModifier * sixteenthNoteTime;
-      this.notes[i].playOn(noteOnTime);
-      this.notes[i].playOff(noteOnTime + this.notes[i].durationModifier * sixteenthNoteTime);
+      console.log('Note playing on time: '+cumulativeTime + ' duration: '+this.notes[i].durationModifier * sixteenthNoteTime);
+      this.notes[i].playOn(cumulativeTime);
+      this.notes[i].playOff(cumulativeTime + this.notes[i].durationModifier * sixteenthNoteTime);
+      cumulativeTime += this.notes[i].durationModifier * sixteenthNoteTime;
     }
   }
 }
@@ -45,7 +47,7 @@ Measure.prototype.generateNotes = function() {
   var totalDuration = 0;
 
   while(totalDuration < 1) {
-    var note = new Note(this.audioContext);
+    var note = new Note(this.audioContext, this.sixteenthNoteTime);
 
     if(note.duration + totalDuration <= 1) {
       totalDuration += note.duration;

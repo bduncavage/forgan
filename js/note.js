@@ -1,15 +1,17 @@
 var NoteDurationModifiers = [1, 2, 4, 8, 16];
 var NoteDurations = [0.0625, 0.125, 0.25, 0.5, 1];
 
-function Note(audioContext) {
+function Note(audioContext, shortestNoteDuration) {
   this.audioContext = audioContext;
   this.sampleRate = audioContext.sampleRate;
   
-  var durIndex = this.getRandomInt(0, NoteDurations.length);
+  var durIndex = this.getRandomInt(0, NoteDurations.length - 1);
   this.durationModifier = NoteDurationModifiers[durIndex];
   this.duration = NoteDurations[durIndex];
+  this.shortestNoteDuration = shortestNoteDuration;
 
-  this.buffer = this.audioContext.createBuffer(1, 44100, this.sampleRate); 
+  var numFrames = this.sampleRate * (shortestNoteDuration * this.durationModifier);
+  this.buffer = this.audioContext.createBuffer(1, numFrames, this.sampleRate); 
   // fill the buffer with a sine wave of a random frequency
   this.generateRandomNote(); 
 }

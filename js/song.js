@@ -15,13 +15,14 @@ Song.prototype.playOn = function(time) {
   for (var i = 0; i < this.measures.length; i++) {
     if(i == 0) {
       cumulativeTime = startTime + this.measures[i].totalDuration;
+      console.log('Playing measure['+i+'] on time: '+startTime);
       this.measures[i].playOn(startTime);
       this.measures[i].playOff(cumulativeTime);
     } else {
-      var prevMeasure = this.measures[i - 1];
-      var measureOnTime = cumulativeTime + prevMeasure.totalDuration;
-      this.measures[i].playOn(measureOnTime);
-      this.measures[i].playOff(measureOnTime + this.measures[i].totalDuration);
+      console.log('Playing measure['+i+'] on time: '+cumulativeTime);
+      this.measures[i].playOn(cumulativeTime);
+      this.measures[i].playOff(cumulativeTime + this.measures[i].totalDuration);
+      cumulativeTime += this.measures[i].totalDuration;
     }
   }
 }
