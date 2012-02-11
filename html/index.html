@@ -7,6 +7,7 @@
 Title
 </title>
 
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="../js/noteTable.js"></script>
 <script type="text/javascript" src="../js/note.js"></script>
 <script type="text/javascript" src="../js/measure.js"></script>
@@ -14,15 +15,54 @@ Title
 
 <script type="text/javascript">
 
+// stupid this should be wrapped in a library
+// ... but this is a hack.
+var echonestSearchEndpoint = 'http://developer.echonest.com/api/v4/song/search?api_key=N6E4NIOVYMTHNDM8J&artist=[artist]&title=[songTitle]';
+var echonestProfileEndpoint = 'http://developer.echonest.com/api/v4/song/profile?api_key=N6E4NIOVYMTHNDM8J&id=[songId]&bucket=audio_summary';
+
 var audioContext = new webkitAudioContext();
-var song = new Song(audioContext, 4, 80);
+var currentSongProfile = null;
+var currentSongAnalysis = null;
+
+function playSampleSong() {
+  new Song(audioContext, 10, 80).playOn(0);
+}
+
+function getAnalysis(artist, songTitle) {
+  artist = escape(artist);
+  songTitle = escape(songTitle);
+  var searchUrl = echonestSearchEndpoint.replace('[artist]', artist).replace('[songTitle]', songTitle);
+  $.get(searchUrl, function(data) {
+    // just pick the first result
+    var songId = data.response.songs[0].id;
+    // now get the profile data
+    var profileUrl = echonestProfileEndpoint.replace('[songId]', songId);
+    $.get(profileUrl, function(data) {
+      // finally get the analysis data
+      var analysisUrl = data.response.songs[0].audio_summary.analysis_url;
+      currentSongProfile = data.response.songs[0].audio_summary;
+      $.get(analysisUrl, function(data) {
+        currentSongAnalysis = data;
+      });
+    });
+  });
+} 
 
 </script>
 
 </head>
 
 <body>
-<button type="button" onclick="song.playOn(0);">Play</button>
+
+<div>
+<button type="button" onclick="playSampleSong();">Play Random</button>
+</div>
+
+<div>
+<input type=text" name="artistName" value="ramones" /><input type="text" value="blitzkreig bop" name="songTitle" />
+<button type="button" onclick="getAnalysis(document.getElementsByName('artistName')[0].value, document.getElementsByName('songTitle')[0].value);">Begin!</button>
+</div>
+
 </body>
 
 </html>

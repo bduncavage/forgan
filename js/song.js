@@ -1,7 +1,10 @@
-function Song(audioContext, measureCount, tempo) {
+function Song(audioContext, duration, tempo) {
   this.audioContext = audioContext;
   this.tempo = tempo;
   this.measures = [];
+
+  var timeSignature = 4; // TODO: support non-4/4 time?
+  var measureCount = ((tempo / 60) * duration) / timeSignature;
 
   for (var i = 0; i < measureCount; i++) {
     this.measures[i] = new Measure(this.audioContext, tempo);
