@@ -23,12 +23,15 @@ var echonestProfileEndpoint = 'http://developer.echonest.com/api/v4/song/profile
 var audioContext = new webkitAudioContext();
 var currentSongProfile = null;
 var currentSongAnalysis = null;
+var sampleSongId = 'SORSQAD1311AFDFFF1';
 
 function playSampleSong() {
   new Song(audioContext, 10, 80).playOn(0);
 }
 
 function getAnalysis(artist, songTitle) {
+  /* Just return the local sample data while
+   * crabclaw gets the flask api up and running
   artist = escape(artist);
   songTitle = escape(songTitle);
   var searchUrl = echonestSearchEndpoint.replace('[artist]', artist).replace('[songTitle]', songTitle);
@@ -46,7 +49,20 @@ function getAnalysis(artist, songTitle) {
       });
     });
   });
+  */
+  $.get('js/sampleData/blitzkreig_bop.json', function (data) {
+    currentSongAnalysis = data;
+    var profileUrl = echonestProfileEndpoint.replace('[songId]', sampleSongId;
+    $.get(profileUrl, function(data) {
+      currentSongProfile = data.response.songs[0].audio_summary;
+      startGenesisDevice();
+    } 
+  }
 } 
+
+function startGenesisDevice() {
+  
+}
 
 </script>
 
