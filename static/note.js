@@ -77,7 +77,7 @@ Note.prototype.playOn = function(time) {
 
   this.currentBufferSource = this.audioContext.createBufferSource();
 
-  var source = this.audioContext.createBufferSource();
+  var source = this.currentBufferSource; 
   source.buffer = this.buffer;
   source.connect(this.audioContext.destination);
   source.noteOn(time);
