@@ -50,7 +50,3 @@ class Echonest(object):
     response, content = http.request(look_up_url)
     json_content = json.loads(content)
     return json_content
-
-# example http://developer.echonest.com/api/v4/song/profile?api_key=N6E4NIOVYMTHNDM8J&id=SONWCPE12B3A138A4E&bucket=audio_summary
-
-#http://developer.echonest.com/api/v4/song/search?api_key=N6E4NIOVYMTHNDM8J&format=json&results=1&artist=radiohead&title=karma%20police
