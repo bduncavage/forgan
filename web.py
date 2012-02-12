@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 
 import os
+import json
+import httplib2
 from flask import Flask, request, jsonify
 from pprint import pprint
 from constants import Constants
+from echonest import Echonest
+
 app = Flask(__name__)
 state = {}
 
@@ -13,7 +17,27 @@ def index():
 
 @app.route('/api/getEchonestData')
 def get_echonest_data():
-  return jsonify({'result':'I work'})
+  artist = request.args.get('artist')
+  track = request.args.get('track')
+  en = Echonest()
+  song = en.song_lookup(artist, track)
+  track_id = song[0].get('id')
+  song_profile = en.audio_profile(track_id)
+  song_json_url = song_profile[0].get('audio_summary', {}).get('analysis_url', '')
+  http = httplib2.Http()
+  response, content = http.request(song_json_url)
+  api_response_dict = {
+    'summary': song_profile[0].get('audio_summary', {})
+    }
+  json_profile_response = json.loads(content)
+
+  api_response_dict.update({'profile': json_profile_response})
+
+  return jsonify(api_response_dict)
+
+
+
+
 
 """
 @app.route('/api/get')
