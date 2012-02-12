@@ -89,6 +89,13 @@ Note.prototype.playOff = function (time) {
   }
 }
 
+Note.prototype.stop = function() {
+  if (this.currentBufferSource != null) {
+    this.currentBufferSource.disconnect(this.audioContext.destination);
+    this.currentBufferSource = null;
+  }
+}
+
 Note.prototype.getDuration = function() {
   if(this.actualDuration > 0) {
     return this.actualDuration;

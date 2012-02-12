@@ -46,6 +46,12 @@ Measure.prototype.playOff = function(time) {
   }
 }
 
+Measure.prototype.stop = function() {
+  for(var i = 0; i < this.notes.length; i++) {
+    this.notes[i].stop();
+  }
+}
+
 Measure.prototype.generateNotes = function() {
   var totalDuration = 0;
 

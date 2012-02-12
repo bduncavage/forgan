@@ -47,3 +47,11 @@ Song.prototype.playOff = function(time) {
   }
 }
 
+Song.prototype.stop = function () {
+  // stop NOW, no noteOff bullcrap
+  // basically tell everything to pull
+  // the plug from the hardware destination
+  for(var i = 0; i < this.measures.length; i++) {
+    this.measures[i].stop();
+  }
+}
