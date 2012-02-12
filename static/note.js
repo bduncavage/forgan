@@ -86,7 +86,6 @@ Note.prototype.playOn = function(time) {
 Note.prototype.playOff = function (time) {
   if(this.currentBufferSource != null) {
     this.currentBufferSource.noteOff(time);
-    this.currentBufferSource.disconnect(this.audioContext.destination);
   }
 }
 
