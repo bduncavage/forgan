@@ -7,7 +7,7 @@ GenesisDevice.prototype.ignite = function(analysisData, isDebug) {
 
   var segments = analysisData.segments;
   if(isDebug === true) {
-    segments = analysisData.segments.slice(0, 30); // 30 segments for testing
+    segments = analysisData.segments.slice(0, 100); // 100 segments for testing
   }
 
 
