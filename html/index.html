@@ -36,15 +36,13 @@ function getAnalysis(artist, songTitle) {
   var artist = escape(artist);
   var songTitle = escape(songTitle);
 
-/*
   var url = apiEndpoint.replace('[artist]', artist).replace('[songTitle]', songTitle);
   $.get(url, function(data) {
     currentSongAnalysis = data.profile;
     currentSongProfile = data.summary;
     startGenesisDevice(currentSongAnalysis); 
   });
-*/
-  
+ /* 
   $.get('../static/sampleData/blitzkreig_bop.json', function (data) {
     currentSongAnalysis = data;
     var profileUrl = echonestProfileEndpoint.replace('[songId]', sampleSongId);
@@ -53,7 +51,7 @@ function getAnalysis(artist, songTitle) {
       startGenesisDevice(currentSongAnalysis);
     });
   });
-  
+  */
 } 
 
 function startGenesisDevice(analysisData) {
