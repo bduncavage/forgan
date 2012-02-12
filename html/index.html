@@ -78,6 +78,20 @@ function playSong() {
   song.playOn(0);
 }
 
+function startLearning() {
+  var artist = document.getElementsByName('artistName')[0];
+  var songTitle = document.getElementsByName('songTitle')[0];
+
+  if(artist.value == artist.title) {
+    artist.value = '';
+  }
+  if(songTitle.value == songTitle.title) {
+    songTitle.value = '';
+  }
+
+  getAnalysis(artist.value, songTitle.value);
+}
+
 // UI stuff
 $(function() {
   
@@ -107,7 +121,7 @@ $(function() {
 <div id="learn-wrapper" class="content">
 <input type=text" title="Artist Name (optional)" class="defaultText" name="artistName" />
 <input type="text" title="Song Title" class="defaultText" name="songTitle" />
-<button id="learn-button" onclick="getAnalysis(document.getElementsByName('artistName')[0].value, document.getElementsByName('songTitle')[0].value);">Learn the Song!</button>
+<button id="learn-button" onclick="startLearning();">Learn the Song!</button>
 
 <p class='warning-container'>
   <input type="checkbox" id="learn-whole-song">Learn whole song?</input>
