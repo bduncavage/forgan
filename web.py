@@ -4,7 +4,6 @@ import os
 import json
 import httplib2
 from flask import Flask, request, jsonify
-from pprint import pprint
 from constants import Constants
 from echonest import Echonest
 
@@ -35,18 +34,6 @@ def get_echonest_data():
 
   return jsonify(api_response_dict)
 
-
-
-
-
-"""
-@app.route('/api/get')
-def get():
-  keys = request.args.get('keys')
-  extras = request.args.get('extras')
-  response = api.get(keys=keys, extras=extras)
-  return jsonify(response)
-"""
 if __name__ == '__main__':
   port = int(os.environ.get('PORT', 5000))
   app.debug = True
