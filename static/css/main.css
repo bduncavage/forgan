@@ -39,6 +39,14 @@ ul {
 }
 
 #echonest {
+  margin-right: 50px;
+}
+
+.suggestions {
+  font-size: small;
+  width: 200px;
+  margin-left:auto;
+  margin-right:auto;
 }
 
 .warning-container {
