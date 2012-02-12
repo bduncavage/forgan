@@ -19,7 +19,7 @@ Title
 // stupid this should be wrapped in a library
 // ... but this is a hack.
 var apiEndpoint = 'http://evolv3r.herokuapp.com/api/getEchonestData?artist=[artist]&track=[songTitle]';
-
+var echonestProfileEndpoint = 'http://developer.echonest.com/api/v4/song/profile?api_key=N6E4NIOVYMTHNDM8J&id=[songId]&bucket=audio_summary';
 var audioContext = new webkitAudioContext();
 var genesisDevice = new GenesisDevice(audioContext);
 var song = null;
@@ -36,14 +36,15 @@ function getAnalysis(artist, songTitle) {
   var artist = escape(artist);
   var songTitle = escape(songTitle);
 
+/*
   var url = apiEndpoint.replace('[artist]', artist).replace('[songTitle]', songTitle);
   $.get(url, function(data) {
     currentSongAnalysis = data.profile;
     currentSongProfile = data.summary;
     startGenesisDevice(currentSongAnalysis); 
   });
-
-  /*
+*/
+  
   $.get('../static/sampleData/blitzkreig_bop.json', function (data) {
     currentSongAnalysis = data;
     var profileUrl = echonestProfileEndpoint.replace('[songId]', sampleSongId);
@@ -52,7 +53,7 @@ function getAnalysis(artist, songTitle) {
       startGenesisDevice(currentSongAnalysis);
     });
   });
-  */
+  
 } 
 
 function startGenesisDevice(analysisData) {

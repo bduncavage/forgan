@@ -17,15 +17,15 @@ function Note(audioContext, shortestNoteDuration, noteData) {
   if(noteData == null) {
     this.generateRandomNote();
   } else {
-    var noteTable = new NoteTable();
-    var bufferIndex = 0;
-    for(var i = 0; i < noteData.pitches.length; i++) {
-      if(noteData.pitches[i] > 0.9 && bufferIndex == 0) {
-        this.freq = noteTable.noteInChromaticScaleAtIndex(i).freq;
-        this.buffers[bufferIndex] = this.audioContext.createBuffer(1, noteData.duration * this.sampleRate, this.sampleRate);
-        this.fillBufferWithFrequency(bufferIndex, this.freq);
-        bufferIndex++;
-      }
+    var noteTable = new NoteTable(6);
+
+    var buf = this.buffer.getChannelData(0);
+    for(var i = 0; i < noteTable.numPitches; i++) {
+      var pitchWeight = noteData.pitches[i % 12];
+      for(var j = 0; j < buf.length; j++) {
+        //buf[j] += Math.sin(j * noteTable.notes[i]) * pitchWeight;
+        buf[j] += Math.sin(2 * Math.PI *  noteTable.notes[i] * ( j / this.sampleRate) ) * pitchWeight;
+      } 
     }
   }
 }
@@ -41,7 +41,7 @@ Note.prototype.initialize = function(audioContext, shortestNoteDuration) {
   }
   numFrames = this.sampleRate * this.actualDuration;
 
-  this.buffers = [];
+  this.buffer = audioContext.createBuffer(1, numFrames, this.sampleRate);
 }
 
 Note.prototype.generateRandomNote = function(min, max) {
@@ -54,16 +54,17 @@ Note.prototype.generateRandomNote = function(min, max) {
   }
 
   var randIndex = this.getRandomInt(0, noteTable.count - 1);
-  this.freq = noteTable.frequencyAtIndex(randIndex);;
+  this.freq = noteTable.notes[randIndex];
   // now we've got our frequency
   this.fillBufferWithFrequency(0, this.freq);
 }
 
-Note.prototype.fillBufferWithFrequency = function(index, freq) {
+Note.prototype.fillBufferWithFrequency = function(freq) {
   // fill the buffer
-  var buf = this.buffers[index].getChannelData(0);
+  var buf = this.buffer.getChannelData(0);
   for (var i = 0; i < buf.length; i++) {
-    buf[i] = Math.pow(Math.sin(i / (this.sampleRate / 2 * Math.PI * this.freq), 2)); 
+    //buf[i] = Math.sin(i / (this.sampleRate / 2 * Math.PI * freq)); 
+    buf[i] = Math.pow(Math.sin(freq * (2 * Math.PI) * i / this.sampleRate), 1.9);
   }
 }
 
@@ -74,12 +75,10 @@ Note.prototype.playOn = function(time) {
 
   this.currentBufferSource = this.audioContext.createBufferSource();
 
-  for(var i = 0; i < this.buffers.length; i++) {
-    var source = this.audioContext.createBufferSource();
-    source.buffer = this.buffers[i];
-    source.connect(this.audioContext.destination);
-    source.noteOn(time);
-  }
+  var source = this.audioContext.createBufferSource();
+  source.buffer = this.buffer;
+  source.connect(this.audioContext.destination);
+  source.noteOn(time);
 }
 
 Note.prototype.playOff = function (time) {
