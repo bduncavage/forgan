@@ -81,6 +81,11 @@ function playSong() {
 }
 
 function startLearning() {
+  if(song != null) {
+    song.stop();
+    song = null;
+  }
+
   var artist = document.getElementsByName('artistName')[0];
   var songTitle = document.getElementsByName('songTitle')[0];
 
