@@ -25,6 +25,10 @@ body {
   display:none;
 }
 
+#echonest {
+  margin-top: 350px;
+}
+
 .warning-container {
   font-size: medium;
   color: #aaa;
@@ -39,4 +43,10 @@ body {
   color: #a1a1a1;
   font-style: italic;
   font-size: medium;
+}
+
+button {
+  font-size: large;
+  font-family: Helvetica;
+  font-style: bold;
 }
