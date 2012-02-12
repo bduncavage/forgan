@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>
-Title
+Frankie&rsquo;s Organ
 </title>
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -33,6 +33,9 @@ function playSampleSong() {
 }
 
 function getAnalysis(artist, songTitle) {
+  $('#its-alive').fadeOut();
+  $('stop-button').fadeOut();
+
   var artist = escape(artist);
   var songTitle = escape(songTitle);
 
@@ -55,10 +58,12 @@ function getAnalysis(artist, songTitle) {
 } 
 
 function startGenesisDevice(analysisData) {
-  var notes = genesisDevice.ignite(analysisData, true);
-  song = new Song(audioContext, analysisData.track.duration, analysisData.track.tempo, notes);
-
-  song.playOn(0);
+  //var notes = genesisDevice.ignite(analysisData, true);
+  //song = new Song(audioContext, analysisData.track.duration, analysisData.track.tempo, notes);
+  // at this point we have computed the song and are ready to play
+  // so notify the user that frankie is ready.
+  $('#its-alive').fadeIn();
+  $('#stop-button').fadeIn();
 }
 
 </script>
@@ -69,8 +74,15 @@ function startGenesisDevice(analysisData) {
 
 <div>
 <input type=text" name="artistName" value="nirvana" /><input type="text" value="come as you are" name="songTitle" />
-<button type="button" onclick="getAnalysis(document.getElementsByName('artistName')[0].value, document.getElementsByName('songTitle')[0].value);">Begin!</button>
-<button type="button" onclick="song.stop();">Stop</button>
+<button onclick="getAnalysis(document.getElementsByName('artistName')[0].value, document.getElementsByName('songTitle')[0].value);">Learn the Song!</button>
+<button onclick="song.stop();" id="stop-button" style="display:none;">Stop</button>
+</div>
+
+<div id="its-alive" style="display:none;">
+<button onclick="song.playOn(0);">It's alive! Play it!</button>
+<p class="warning-container">
+  Subtlety is not one of Frankie&rsquo;s strong points, so you&rsquo;ll probably want to turn your volume waaaay down.
+</p>
 </div>
 
 </body>
