@@ -40,7 +40,7 @@ function getAnalysis(artist, songTitle) {
   $.get(url, function(data) {
     currentSongAnalysis = data.profile;
     currentSongProfile = data.summary;
-    startGenesisDevice(currentSongAnalysis); 
+    startGenesisDevice(currentSongAnalysis, true); 
   });
  /* 
   $.get('../static/sampleData/blitzkreig_bop.json', function (data) {

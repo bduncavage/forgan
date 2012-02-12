@@ -2,9 +2,14 @@ function GenesisDevice(audioContext) {
   this.audioContext = audioContext;
 }
 
-GenesisDevice.prototype.ignite = function(analysisData) {
+GenesisDevice.prototype.ignite = function(analysisData, isDebug) {
   this.notes = [];
-  var segments = analysisData.segments.slice(0, 20); // 20 segments for testing
+
+  var segments = analysisData.segments;
+  if(isDebug === true) {
+    segments = analysisData.segments.slice(0, 30); // 30 segments for testing
+  }
+
 
   for(var i = 0; i < segments.length; i++) {
     var segment = segments[i];
