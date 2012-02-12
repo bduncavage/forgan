@@ -4,6 +4,15 @@ body {
   color: #fff;
 }
 
+a {
+  color: #6f6;
+  text-decoration: none;
+}
+
+ul {
+  list-style-type: none;
+}
+
 #content-wrapper {
   background:url(../img/frankie-background.jpg) no-repeat;
   width:866px;
@@ -30,7 +39,6 @@ body {
 }
 
 #echonest {
-  margin-top: 150px;
 }
 
 .warning-container {
