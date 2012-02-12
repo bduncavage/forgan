@@ -59,7 +59,11 @@ function getAnalysis(artist, songTitle) {
 } 
 
 function startGenesisDevice(analysisData) {
-  var notes = genesisDevice.ignite(analysisData, true);
+  var shortSong = true;
+  if($('#learn-whole-song').is(':checked')) {
+    shortSong = false;
+  }
+  var notes = genesisDevice.ignite(analysisData, shortSong);
   song = new Song(audioContext, analysisData.track.duration, analysisData.track.tempo, notes);
   // at this point we have computed the song and are ready to play
   // so notify the user that frankie is ready.
@@ -81,11 +85,17 @@ function playSong() {
 <div>
 <input type=text" name="artistName" value="nirvana" /><input type="text" value="come as you are" name="songTitle" />
 <button id="learn-button" onclick="getAnalysis(document.getElementsByName('artistName')[0].value, document.getElementsByName('songTitle')[0].value);">Learn the Song!</button>
-<button onclick="song.stop();" id="stop-button" style="display:none;">Stop</button>
+
+<p class='warning-container'>
+  <input type="checkbox" id="learn-whole-song">Learn whole song?</input>
+  It will take Frankie a lot longer to learn the entire song, 
+  but probably less time than it would take you to learn it.
+</p>
 </div>
 
 <div id="its-alive" style="display:none;">
 <button onclick="playSong();">It's alive! Play it!</button>
+<button onclick="song.stop();" id="stop-button" style="display:none;">Stop</button>
 <p class="warning-container">
   Subtlety is not one of Frankie&rsquo;s strong points, so you&rsquo;ll probably want to turn your volume waaaay down.
 </p>
