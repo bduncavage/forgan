@@ -58,8 +58,8 @@ function getAnalysis(artist, songTitle) {
 } 
 
 function startGenesisDevice(analysisData) {
-  //var notes = genesisDevice.ignite(analysisData, true);
-  //song = new Song(audioContext, analysisData.track.duration, analysisData.track.tempo, notes);
+  var notes = genesisDevice.ignite(analysisData, true);
+  song = new Song(audioContext, analysisData.track.duration, analysisData.track.tempo, notes);
   // at this point we have computed the song and are ready to play
   // so notify the user that frankie is ready.
   $('#its-alive').fadeIn();
