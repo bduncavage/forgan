@@ -16,6 +16,7 @@ GenesisDevice.prototype.ignite = function(analysisData, isDebug) {
     var noteData = {};
     noteData.pitches = segment.pitches;
     noteData.duration = segment.duration;
+    noteData.timbre = segment.timbre;
     var note = new Note(this.audioContext, -1, noteData);
     this.notes.push(note);
   }
