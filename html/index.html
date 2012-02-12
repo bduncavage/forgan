@@ -18,8 +18,7 @@ Title
 
 // stupid this should be wrapped in a library
 // ... but this is a hack.
-var echonestSearchEndpoint = 'http://developer.echonest.com/api/v4/song/search?api_key=N6E4NIOVYMTHNDM8J&artist=[artist]&title=[songTitle]';
-var echonestProfileEndpoint = 'http://developer.echonest.com/api/v4/song/profile?api_key=N6E4NIOVYMTHNDM8J&id=[songId]&bucket=audio_summary';
+var apiEndpoint = 'http://evolv3r.herokuapp.com/api/getEchonestData?artist=[artist]&track=[songTitle]';
 
 var audioContext = new webkitAudioContext();
 var genesisDevice = new GenesisDevice(audioContext);
@@ -34,26 +33,17 @@ function playSampleSong() {
 }
 
 function getAnalysis(artist, songTitle) {
-  /* Just return the local sample data while
-   * crabclaw gets the flask api up and running
-  artist = escape(artist);
-  songTitle = escape(songTitle);
-  var searchUrl = echonestSearchEndpoint.replace('[artist]', artist).replace('[songTitle]', songTitle);
-  $.get(searchUrl, function(data) {
-    // just pick the first result
-    var songId = data.response.songs[0].id;
-    // now get the profile data
-    var profileUrl = echonestProfileEndpoint.replace('[songId]', songId);
-    $.get(profileUrl, function(data) {
-      // finally get the analysis data
-      var analysisUrl = data.response.songs[0].audio_summary.analysis_url;
-      currentSongProfile = data.response.songs[0].audio_summary;
-      $.get(analysisUrl, function(data) {
-        currentSongAnalysis = data;
-      });
-    });
+  var artist = escape(artist);
+  var songTitle = escape(songTitle);
+
+  var url = apiEndpoint.replace('[artist]', artist).replace('[songTitle]', songTitle);
+  $.get(url, function(data) {
+    currentSongAnalysis = data.profile;
+    currentSongProfile = data.summary;
+    startGenesisDevice(currentSongAnalysis); 
   });
-  */
+
+  /*
   $.get('../static/sampleData/blitzkreig_bop.json', function (data) {
     currentSongAnalysis = data;
     var profileUrl = echonestProfileEndpoint.replace('[songId]', sampleSongId);
@@ -62,6 +52,7 @@ function getAnalysis(artist, songTitle) {
       startGenesisDevice(currentSongAnalysis);
     });
   });
+  */
 } 
 
 function startGenesisDevice(analysisData) {
