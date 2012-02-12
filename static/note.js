@@ -22,10 +22,12 @@ function Note(audioContext, shortestNoteDuration, noteData) {
     var buf = this.buffer.getChannelData(0);
     for(var i = 0; i < noteTable.numPitches; i++) {
       var pitchWeight = noteData.pitches[i % 12];
+      if(pitchWeight > 0.8) {
       var phase = Math.random() * 2 * Math.PI;
       for(var j = 0; j < buf.length; j++) {
         buf[j] += Math.sin(2 * Math.PI *  noteTable.notes[i] * ( j / this.sampleRate) + phase ) * pitchWeight;
       } 
+      }
     }
   }
 }
