@@ -63,7 +63,7 @@ Note.prototype.fillBufferWithFrequency = function(index, freq) {
   // fill the buffer
   var buf = this.buffers[index].getChannelData(0);
   for (var i = 0; i < buf.length; i++) {
-    buf[i] = Math.pow(Math.sin(i / (this.sampleRate / 2 * Math.PI * this.frequency), 2)); 
+    buf[i] = Math.pow(Math.sin(i / (this.sampleRate / 2 * Math.PI * this.freq), 2)); 
   }
 }
 
