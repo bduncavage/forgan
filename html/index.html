@@ -7,6 +7,8 @@
 Frankie&rsquo;s Organ
 </title>
 
+<link href="../static/css/main.css" rel="stylesheet" type="text/css">
+
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="../static/noteTable.js"></script>
 <script type="text/javascript" src="../static/note.js"></script>
@@ -76,31 +78,53 @@ function playSong() {
   song.playOn(0);
 }
 
+// UI stuff
+$(function() {
+  
+    $(".defaultText").focus(function(srcc) {
+        if ($(this).val() == $(this)[0].title) {
+          $(this).removeClass("defaultTextActive");
+          $(this).val("");
+        }
+    });
+    
+    $(".defaultText").blur(function() {
+        if ($(this).val() == "") {
+          $(this).addClass("defaultTextActive");
+          $(this).val($(this)[0].title);
+        }
+    });
+
+  $('.defaultText').blur();
+});
+
 </script>
 
 </head>
 
 <body>
-
-<div>
-<input type=text" name="artistName" value="nirvana" /><input type="text" value="come as you are" name="songTitle" />
+<div id="content-wrapper">
+<div id="learn-wrapper" class="content">
+<input type=text" title="Artist Name (optional)" class="defaultText" name="artistName" />
+<input type="text" title="Song Title" class="defaultText" name="songTitle" />
 <button id="learn-button" onclick="getAnalysis(document.getElementsByName('artistName')[0].value, document.getElementsByName('songTitle')[0].value);">Learn the Song!</button>
 
 <p class='warning-container'>
   <input type="checkbox" id="learn-whole-song">Learn whole song?</input>
-  It will take Frankie a lot longer to learn the entire song, 
-  but probably less time than it would take you to learn it.
+  It will take Frankie a lot longer to learn the entire song.
 </p>
 </div>
 
-<div id="its-alive" style="display:none;">
-<button onclick="playSong();">It's alive! Play it!</button>
-<button onclick="song.stop();" id="stop-button" style="display:none;">Stop</button>
+<div id="its-alive" class="content">
 <p class="warning-container">
   Subtlety is not one of Frankie&rsquo;s strong points, so you&rsquo;ll probably want to turn your volume waaaay down.
 </p>
+<a onclick="playSong();">
+  <img src="../static/img/frankie-play.png" />
+</a>
+<button onclick="song.stop();" id="stop-button" style="display:none;">Stop</button>
 </div>
-
+</div> <!-- content-wrapper -->
 </body>
 
 </html>

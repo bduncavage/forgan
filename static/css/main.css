@@ -1,0 +1,38 @@
+body {
+  background: #000;
+  font-family: Helvetica;
+  color: #fff;
+}
+
+#content-wrapper {
+  background:url(../img/frankie-background.jpg) no-repeat;
+  width:866px;
+  height:677px;
+  margin-left:auto;
+  margin-right:auto;
+  padding-top:180px;
+}
+
+.content {
+  margin-left:auto;
+  margin-right:auto;
+  width:800px;
+  text-align:center;
+}
+
+#its-alive {
+  margin-top: 50px;
+  display:none;
+}
+
+.warning-container {
+  font-size: medium;
+  color: #aaa;
+}
+
+.defaultText { width: 200px; }
+.defaultTextActive {
+  color: #a1a1a1;
+  font-style: italic;
+  font-size: medium;
+}
