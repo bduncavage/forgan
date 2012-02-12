@@ -30,7 +30,11 @@ body {
   color: #aaa;
 }
 
-.defaultText { width: 200px; }
+.defaultText {
+  width: 200px;
+  font-size: medium;
+}
+
 .defaultTextActive {
   color: #a1a1a1;
   font-style: italic;
