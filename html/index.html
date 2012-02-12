@@ -56,8 +56,7 @@ function getAnalysis(artist, songTitle) {
 
 function startGenesisDevice(analysisData) {
   var notes = genesisDevice.ignite(analysisData);
-  var duration = 10; // for testing, normally analysisData.track.duration
-  song = new Song(audioContext, analysisData.track.duration, analysisData.track.tempo, notes.slice(0, 10));
+  song = new Song(audioContext, analysisData.track.duration, analysisData.track.tempo, notes);
 
   song.playOn(0);
 }

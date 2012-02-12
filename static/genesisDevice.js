@@ -4,7 +4,7 @@ function GenesisDevice(audioContext) {
 
 GenesisDevice.prototype.ignite = function(analysisData) {
   this.notes = [];
-  var segments = analysisData.segments;
+  var segments = analysisData.segments.slice(0, 20); // 20 segments for testing
 
   for(var i = 0; i < segments.length; i++) {
     var segment = segments[i];
