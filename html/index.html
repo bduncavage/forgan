@@ -12,6 +12,7 @@ Title
 <script type="text/javascript" src="../static/note.js"></script>
 <script type="text/javascript" src="../static/measure.js"></script>
 <script type="text/javascript" src="../static/song.js"></script>
+<script type="text/javascript" src="../static/genesisDevice.js"></script>
 
 <script type="text/javascript">
 
@@ -21,6 +22,9 @@ var echonestSearchEndpoint = 'http://developer.echonest.com/api/v4/song/search?a
 var echonestProfileEndpoint = 'http://developer.echonest.com/api/v4/song/profile?api_key=N6E4NIOVYMTHNDM8J&id=[songId]&bucket=audio_summary';
 
 var audioContext = new webkitAudioContext();
+var genesisDevice = new GenesisDevice(audioContext);
+var song = null;
+
 var currentSongProfile = null;
 var currentSongAnalysis = null;
 var sampleSongId = 'SORSQAD1311AFDFFF1';
@@ -50,18 +54,21 @@ function getAnalysis(artist, songTitle) {
     });
   });
   */
-  $.get('js/sampleData/blitzkreig_bop.json', function (data) {
+  $.get('../static/sampleData/blitzkreig_bop.json', function (data) {
     currentSongAnalysis = data;
-    var profileUrl = echonestProfileEndpoint.replace('[songId]', sampleSongId;
+    var profileUrl = echonestProfileEndpoint.replace('[songId]', sampleSongId);
     $.get(profileUrl, function(data) {
       currentSongProfile = data.response.songs[0].audio_summary;
-      startGenesisDevice();
-    } 
-  }
+      startGenesisDevice(currentSongAnalysis);
+    });
+  });
 } 
 
-function startGenesisDevice() {
-  
+function startGenesisDevice(analysisData) {
+  var notes = genesisDevice.ignite(analysisData);
+  song = new Song(audioContext, analysisData.track.duration, analysisData.track.tempo, notes);
+
+  song.playOn(0);
 }
 
 </script>
@@ -77,6 +84,7 @@ function startGenesisDevice() {
 <div>
 <input type=text" name="artistName" value="ramones" /><input type="text" value="blitzkreig bop" name="songTitle" />
 <button type="button" onclick="getAnalysis(document.getElementsByName('artistName')[0].value, document.getElementsByName('songTitle')[0].value);">Begin!</button>
+<button type="button" onclick="song.playOff(0);">Stop</button>
 </div>
 
 </body>

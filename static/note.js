@@ -1,30 +1,32 @@
 var NoteDurationModifiers = [1, 2, 4, 8, 16];
 var NoteDurations = [0.0625, 0.125, 0.25, 0.5, 1];
 
-function Note(audioContext, shortestNoteDuration, initialNote) {
-  if(initialNote == null) {
+function Note(audioContext, shortestNoteDuration, noteData) {
+  this.actualDuration = -1;
+  if(noteData == null) {
     var durIndex = this.getRandomInt(0, NoteDurations.length - 1);
     this.durationModifier = NoteDurationModifiers[durIndex];
     this.duration = NoteDurations[durIndex];
   } else {
-    this.duration = initialNote.duration;
-    // this is stupid, need a better way
-    for(var i = 0; i < NoteDurations; i++) {
-      if(this.duration == NoteDurations[i]) {
-        this.durationModifier = NoteDurationModifiers[i];
-        break;
-      }
-    }
+    this.duration = 0;
+    this.actualDuration = noteData.duration;
   }
 
   this.initialize(audioContext, shortestNoteDuration);
 
-  if(initialNote == null) {
+  if(noteData == null) {
     this.generateRandomNote();
   } else {
     var noteTable = new NoteTable();
-    this.freq = noteTable.frequencyForNote(initialNote.noteName);
-    this.fillBufferWithFrequency(this.freq);
+    var bufferIndex = 0;
+    for(var i = 0; i < noteData.pitches.length; i++) {
+      if(noteData.pitches[i] > 0.9 && bufferIndex == 0) {
+        this.freq = noteTable.noteInChromaticScaleAtIndex(i).freq;
+        this.buffers[bufferIndex] = this.audioContext.createBuffer(1, noteData.duration * this.sampleRate, this.sampleRate);
+        this.fillBufferWithFrequency(bufferIndex, this.freq);
+        bufferIndex++;
+      }
+    }
   }
 }
 
@@ -32,8 +34,14 @@ Note.prototype.initialize = function(audioContext, shortestNoteDuration) {
   this.audioContext = audioContext;
   this.sampleRate = audioContext.sampleRate;
   this.shortestNoteDuration = shortestNoteDuration;
-  var numFrames = this.sampleRate * (shortestNoteDuration * this.durationModifier);
-  this.buffer = this.audioContext.createBuffer(1, numFrames, this.sampleRate); 
+  var numFrames = 0;
+
+  if(this.actualDuration == -1) {
+    this.actualDuration = shortestNoteDuration * this.durationModifier;
+  }
+  numFrames = this.sampleRate * this.actualDuration;
+
+  this.buffers = [];
 }
 
 Note.prototype.generateRandomNote = function(min, max) {
@@ -48,12 +56,12 @@ Note.prototype.generateRandomNote = function(min, max) {
   var randIndex = this.getRandomInt(0, noteTable.count - 1);
   this.freq = noteTable.frequencyAtIndex(randIndex);;
   // now we've got our frequency
-  this.fillBufferWithFrequency(this.freq);
+  this.fillBufferWithFrequency(0, this.freq);
 }
 
-Note.prototype.fillBufferWithFrequency = function(freq) {
+Note.prototype.fillBufferWithFrequency = function(index, freq) {
   // fill the buffer
-  var buf = this.buffer.getChannelData(0);
+  var buf = this.buffers[index].getChannelData(0);
   for (var i = 0; i < buf.length; i++) {
     buf[i] = Math.sin(freq * (2 * Math.PI) * i / this.sampleRate);
   }
@@ -66,15 +74,25 @@ Note.prototype.playOn = function(time) {
 
   this.currentBufferSource = this.audioContext.createBufferSource();
 
-  var source = this.currentBufferSource;
-  source.buffer = this.buffer;
-  source.connect(this.audioContext.destination);
-  source.noteOn(time);
+  for(var i = 0; i < this.buffers.length; i++) {
+    var source = this.audioContext.createBufferSource();
+    source.buffer = this.buffers[i];
+    source.connect(this.audioContext.destination);
+    source.noteOn(time);
+  }
 }
 
 Note.prototype.playOff = function (time) {
   if(this.currentBufferSource != null) {
     this.currentBufferSource.noteOff(time);
+  }
+}
+
+Note.prototype.getDuration = function() {
+  if(this.actualDuration > 0) {
+    return this.actualDuration;
+  } else {
+    return this.shortestNoteDuration * this.durationModifier;
   }
 }
 
