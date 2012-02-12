@@ -37,6 +37,7 @@ function playSampleSong() {
 function getAnalysis(artist, songTitle) {
   $('#its-alive').fadeOut();
   $('#stop-button').fadeOut();
+  $('#learning').fadeIn();
   $('#learn-button').html('Frankie learn...');
 
   var artist = escape(artist);
@@ -69,6 +70,7 @@ function startGenesisDevice(analysisData) {
   song = new Song(audioContext, analysisData.track.duration, analysisData.track.tempo, notes);
   // at this point we have computed the song and are ready to play
   // so notify the user that frankie is ready.
+  $('#learning').fadeOut();
   $('#its-alive').fadeIn();
   $('#stop-button').fadeIn();
   $('#learn-button').html('Learn the Song!');
@@ -128,7 +130,9 @@ $(function() {
   It will take Frankie a lot longer to learn the entire song.
 </p>
 </div>
-
+<div id="learning" class="content">
+  <img src="../static/img/frankie-learning.gif" />
+</div>
 <div id="its-alive" class="content">
 <p class="warning-container">
   Subtlety is not one of Frankie&rsquo;s strong points, so you&rsquo;ll probably want to turn your volume waaaay down.
@@ -139,7 +143,7 @@ $(function() {
 </a>
 </p>
 <p>
-<a onclick="song.stop();" id="stop-button" style="display:none;">
+<a onclick="song.stop(); song = null;" id="stop-button" style="display:none;">
   <img src="../static/img/frankie-stop.png" />
 </a>
 </p>
