@@ -18,7 +18,7 @@ def index():
 def get_echonest_data():
   artist = request.args.get('artist')
   track = request.args.get('track')
-  en = Echonest()
+  en = Echonest(api_key=ECHONEST_API_KEY)
   song = en.song_lookup(artist, track)
   track_id = song[0].get('id')
   song_profile = en.audio_profile(track_id)
