@@ -4,9 +4,9 @@ import os
 import json
 import httplib2
 from flask import Flask, request, jsonify
-from constants import Constants
 from echonest import Echonest
 
+ECHONEST_API_KEY = os.environ.get("ECHONEST_API")
 app = Flask(__name__)
 state = {}
 

@@ -1,4 +1,3 @@
-from constants import Constants
 import httplib2
 from urllib import urlencode
 import copy
