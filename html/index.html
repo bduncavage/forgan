@@ -10,6 +10,8 @@ Frankie&rsquo;s Organ
 <link href="../static/css/main.css" rel="stylesheet" type="text/css">
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="../static/underscore-min.js"></script>
+
 <script type="text/javascript" src="../static/noteTable.js"></script>
 <script type="text/javascript" src="../static/note.js"></script>
 <script type="text/javascript" src="../static/measure.js"></script>
@@ -20,15 +22,14 @@ Frankie&rsquo;s Organ
 
 // stupid this should be wrapped in a library
 // ... but this is a hack.
-var apiEndpoint = '/api/getEchonestData?artist=[artist]&track=[songTitle]';
-var echonestProfileEndpoint = 'http://developer.echonest.com/api/v4/song/profile?api_key=N6E4NIOVYMTHNDM8J&id=[songId]&bucket=audio_summary';
-var audioContext = new webkitAudioContext();
-var genesisDevice = new GenesisDevice(audioContext);
-var song = null;
-
-var currentSongProfile = null;
-var currentSongAnalysis = null;
-var sampleSongId = 'SORSQAD1311AFDFFF1';
+var apiEndpoint = '/api/getEchonestData?artist=[artist]&track=[songTitle]',
+echonestProfileEndpoint = 'http://developer.echonest.com/api/v4/song/profile?api_key=N6E4NIOVYMTHNDM8J&id=[songId]&bucket=audio_summary',
+audioContext = new webkitAudioContext(),
+genesisDevice = new GenesisDevice(audioContext),
+song,
+currentSongProfile,
+currentSongAnalysis,
+sampleSongId = 'SORSQAD1311AFDFFF1';
 
 function playSampleSong() {
   new Song(audioContext, 10, 80).playOn(0);
@@ -62,11 +63,9 @@ function getAnalysis(artist, songTitle) {
 } 
 
 function startGenesisDevice(analysisData) {
-  var shortSong = true;
-  if($('#learn-whole-song').is(':checked')) {
-    shortSong = false;
-  }
-  var notes = genesisDevice.ignite(analysisData, shortSong);
+  var shortSong = !($('#learn-whole-song').is(':checked')),
+      notes = genesisDevice.ignite(analysisData, shortSong);
+  
   song = new Song(audioContext, analysisData.track.duration, analysisData.track.tempo, notes);
   // at this point we have computed the song and are ready to play
   // so notify the user that frankie is ready.
@@ -81,13 +80,13 @@ function playSong() {
 }
 
 function startLearning() {
-  if(song != null) {
+  if(song) {
     song.stop();
     song = null;
   }
 
-  var artist = document.getElementsByName('artistName')[0];
-  var songTitle = document.getElementsByName('songTitle')[0];
+  var artist = _.first($('[name=artistName]'));
+  var songTitle = _.first($('[name=songTitle]'));
 
   if(artist.value == artist.title) {
     artist.value = '';
