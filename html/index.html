@@ -23,7 +23,6 @@ Frankie&rsquo;s Organ
 // stupid this should be wrapped in a library
 // ... but this is a hack.
 var apiEndpoint = '/api/getEchonestData?artist=[artist]&track=[songTitle]',
-echonestProfileEndpoint = 'http://developer.echonest.com/api/v4/song/profile?api_key=N6E4NIOVYMTHNDM8J&id=[songId]&bucket=audio_summary',
 audioContext = new webkitAudioContext(),
 genesisDevice = new GenesisDevice(audioContext),
 song,
@@ -50,16 +49,6 @@ function getAnalysis(artist, songTitle) {
     currentSongProfile = data.summary;
     startGenesisDevice(currentSongAnalysis); 
   });
- /* 
-  $.get('../static/sampleData/blitzkreig_bop.json', function (data) {
-    currentSongAnalysis = data;
-    var profileUrl = echonestProfileEndpoint.replace('[songId]', sampleSongId);
-    $.get(profileUrl, function(data) {
-      currentSongProfile = data.response.songs[0].audio_summary;
-      startGenesisDevice(currentSongAnalysis);
-    });
-  });
-  */
 } 
 
 function startGenesisDevice(analysisData) {
@@ -136,6 +125,10 @@ $(function() {
   Frankie can't learn every song, but try a bunch and see what he can play!
   Frankie recommends Nirvana "Come as You Are" for your first test.
 </p>
+<p class="suggestions">
+  Frankie's organ is an HTML5 web audio API based music synthesizer. It uses song metadata from <a href="http://echonest.com">echonest.com</a> to attempt a recreation of the song. All processing is done in the browser.
+  Source code for this website is available on <a href="http://github.com/bduncavage/forgan">github</a>.
+</p>
 </div>
 <div id="learning" class="content">
   <img src="../static/img/frankie-learning.gif" />
@@ -162,9 +155,13 @@ $(function() {
       <li>Built by Brett Duncavage</li>
       <li><a href="http://twitter.com/xforward">@xforward</a></li>
       <li><a href="http://rdio.com/people/brettduncavage">rdio: brettduncavage</a></li>
-      <li>with a litle help from Jonathon Klobucar</li>
+    </ul>
+    <ul>
+      <li>with a litle help on the backend from Jonathon Klobucar</li>
       <li><a href="http://twitter.com/cr0wb4r">@cr0wb4r</a></li>
       <li><a href="http://rdio.com/people/klobucar">rdio: klobucar</a></li>
+    </ul>
+    <ul>
       <li><a href="http://echonest.com"><img src="../static/img/echonest.gif" /></a></li>
     </ul>
   </p>
