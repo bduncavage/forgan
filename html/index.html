@@ -37,6 +37,7 @@ function playSampleSong() {
 function getAnalysis(artist, songTitle) {
   $('#its-alive').fadeOut();
   $('#stop-button').fadeOut();
+  $('#about').fadeOut();
   $('#learning').fadeIn();
   $('#learn-button').html('Frankie learn...');
 
@@ -121,6 +122,7 @@ $(function() {
   <input type="checkbox" id="learn-whole-song">Learn whole song?</input>
   It will take Frankie a lot longer to learn the entire song.
 </p>
+<div id="about">
 <p class="suggestions">
   Frankie can't learn every song, but try a bunch and see what he can play!
   Frankie recommends Nirvana "Come as You Are" for your first test.
@@ -129,6 +131,7 @@ $(function() {
   Frankie's organ is an HTML5 web audio API based music synthesizer. It uses song metadata from <a href="http://echonest.com">echonest.com</a> to attempt a recreation of the song. All processing is done in the browser.
   Source code for this website is available on <a href="http://github.com/bduncavage/forgan">github</a>.
 </p>
+</div>
 </div>
 <div id="learning" class="content">
   <img src="../static/img/frankie-learning.gif" />
