@@ -1,0 +1,176 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>
+Frankie&rsquo;s Organ
+</title>
+
+<link href="../static/css/main.css" rel="stylesheet" type="text/css">
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="../static/underscore-min.js"></script>
+
+<script type="text/javascript" src="../static/noteTable.js"></script>
+<script type="text/javascript" src="../static/note.js"></script>
+<script type="text/javascript" src="../static/measure.js"></script>
+<script type="text/javascript" src="../static/song.js"></script>
+<script type="text/javascript" src="../static/genesisDevice.js"></script>
+
+<script type="text/javascript">
+
+// stupid this should be wrapped in a library
+// ... but this is a hack.
+var apiEndpoint = '/api/getEchonestData?artist=[artist]&track=[songTitle]',
+audioContext = new webkitAudioContext(),
+genesisDevice = new GenesisDevice(audioContext),
+song,
+currentSongProfile,
+currentSongAnalysis,
+sampleSongId = 'SORSQAD1311AFDFFF1';
+
+function playSampleSong() {
+  new Song(audioContext, 10, 80).playOn(0);
+}
+
+function getAnalysis(artist, songTitle) {
+  $('#its-alive').fadeOut();
+  $('#stop-button').fadeOut();
+  $('#about').fadeOut();
+  $('#learning').fadeIn();
+  $('#learn-button').html('Frankie learn...');
+
+  var artist = escape(artist);
+  var songTitle = escape(songTitle);
+
+  // Pull some static sample data so we can test
+  // locally.
+  $.get('../static/sampleData/blitzkreig_bop.json', function (data) {
+      currentSongAnalysis = data;
+      startGenesisDevice(currentSongAnalysis);
+   });
+} 
+
+function startGenesisDevice(analysisData) {
+  var shortSong = !($('#learn-whole-song').is(':checked')),
+     notes = genesisDevice.ignite(analysisData, shortSong);
+  
+  song = new Song(audioContext, analysisData.track.duration, analysisData.track.tempo, notes);
+  // at this point we have computed the song and are ready to play
+  // so notify the user that frankie is ready.
+  $('#learning').fadeOut();
+  $('#its-alive').fadeIn();
+  $('#stop-button').fadeIn();
+  $('#learn-button').html('Learn the Song!');
+}
+
+function playSong() {
+  song.playOn(0);
+}
+
+function startLearning() {
+  if(song) {
+    song.stop();
+    song = null;
+  }
+
+  var artist = _.first($('[name=artistName]'));
+  var songTitle = _.first($('[name=songTitle]'));
+
+  if(artist.value == artist.title) {
+    artist.value = '';
+  }
+  if(songTitle.value == songTitle.title) {
+    songTitle.value = '';
+  }
+
+  getAnalysis(artist.value, songTitle.value);
+}
+
+// UI stuff
+$(function() {
+  
+    $(".defaultText").focus(function(srcc) {
+        if ($(this).val() == $(this)[0].title) {
+          $(this).removeClass("defaultTextActive");
+          $(this).val("");
+        }
+    });
+    
+    $(".defaultText").blur(function() {
+        if ($(this).val() == "") {
+          $(this).addClass("defaultTextActive");
+          $(this).val($(this)[0].title);
+        }
+    });
+
+  $('.defaultText').blur();
+});
+
+</script>
+
+</head>
+
+<body>
+<div id="content-wrapper">
+<div id="learn-wrapper" class="content">
+<input type=text" title="Artist Name (optional)" class="defaultText" name="artistName" />
+<input type="text" title="Song Title" class="defaultText" name="songTitle" />
+<button id="learn-button" onclick="startLearning();">Learn!</button>
+<p class='warning-container'>
+  <input type="checkbox" id="learn-whole-song">Learn whole song?</input>
+  It will take Frankie a lot longer to learn the entire song.
+</p>
+<div id="about">
+<p class="suggestions">
+  Frankie can't learn every song, but try a bunch and see what he can play!
+  Frankie recommends Nirvana "Come as You Are" for your first test.
+</p>
+<p class="suggestions">
+  Frankie's organ is an HTML5 web audio API based music synthesizer. It uses song metadata from <a href="http://echonest.com">echonest.com</a> to attempt a recreation of the song. All processing is done in the browser.
+  Source code for this website is available on <a href="http://github.com/bduncavage/forgan">github</a>.
+</p>
+</div>
+</div>
+<div id="learning" class="content">
+  <img src="../static/img/frankie-learning.gif" />
+</div>
+<div id="its-alive" class="content">
+<p class="warning-container">
+  Subtlety is not one of Frankie&rsquo;s strong points, so you&rsquo;ll probably want to turn your volume waaaay down.
+</p>
+<p>
+<a onclick="playSong();">
+  <img src="../static/img/frankie-play.png" />
+</a>
+</p>
+<p>
+<a onclick="song.stop(); song = null;" id="stop-button" style="display:none;">
+  <img src="../static/img/frankie-stop.png" />
+</a>
+</p>
+</div>
+
+<div id="echonest" class="content">
+  <p>
+    <ul>
+      <li>Built by Brett Duncavage</li>
+      <li><a href="http://twitter.com/xforward">@xforward</a></li>
+      <li><a href="http://rdio.com/people/brettduncavage">rdio: brettduncavage</a></li>
+    </ul>
+    <ul>
+      <li>with a litle help from Jonathon Klobucar</li>
+      <li><a href="http://twitter.com/cr0wb4r">@cr0wb4r</a></li>
+      <li><a href="http://rdio.com/people/klobucar">rdio: klobucar</a></li>
+    </ul>
+    <ul>
+      <li><a href="http://echonest.com"><img src="../static/img/echonest.gif" /></a></li>
+    </ul>
+  </p>
+</div>
+
+</div> <!-- content-wrapper -->
+</body>
+
+</html>
